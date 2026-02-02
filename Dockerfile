@@ -1,20 +1,20 @@
 # Use official Java 17 JDK image
 FROM eclipse-temurin:17-jdk
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy all project files into container
+# Copy project files
 COPY . .
 
 # Make Maven wrapper executable
 RUN chmod +x mvnw
 
-# Build the project without tests
+# Build the project
 RUN ./mvnw clean package -DskipTests
 
-# Expose port if your app runs a web server (change 8080 if needed)
+# Render requires an exposed port
 EXPOSE 8080
 
-# Run the packaged jar (update the jar name if needed)
-CMD ["java", "-jar", "target/your-app.jar"]
+# Run any jar generated inside target and bind to Render's port
+CMD ["sh", "-c", "java -jar target/*.jar --server.port=$PORT"]
